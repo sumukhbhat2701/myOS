@@ -20,7 +20,7 @@
 GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptions -fno-leading-underscore
 ASPARAMS = --32
 
-OBJECT_FILES = loader.o kernel.o
+OBJECT_FILES = loader.o kernel.o gdt.o
 %.o: %.cpp
 	g++ ${GPPPARAMS} -o $@ -c $<
 	
@@ -53,6 +53,11 @@ run: kernel.iso
 	# kill all the previously opened VMs and wait for 1s until it closes and start a new one.
 	(killall VirtualBoxVM && sleep 1) || true
 	vboxmanage startvm "myOS"
+
+# kill the running vm
+stop: kernel.iso	
+	killall VirtualBoxVM
+
 
 
 

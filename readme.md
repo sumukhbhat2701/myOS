@@ -1,9 +1,28 @@
-### Pre-requisites: 
-1. linux OS. 
-2. with the following tools installed => g++, binutils, libc6-dev-i386, VirtualBox, grub-legacy, xorriso.
-3. with i386 architecture support and elf32-i386 support.
+### Pre-requisites to generate .bin and .iso files: 
+1. linux OS with pre-existing bootloader (like Grub). 
+2. with the following tools installed: g++, binutils, libc6-dev-i386, virtualbox, grub-legacy, xorriso. (use `sudo apt-get install <package-name>`)
+3. with i386 architecture support and elf32-i386 support. (use `objdump -i` and `objdump -x <any_file>.o` commands to verify the existence)
 
 ### Features:
-1. Boot
+1. Boot on a PC with linux's grub bootloader:
+- Step 1. `make install` => `ls /boot/` => should have kernel.bin
+- Step 2. `sudo <text-editor> /boot/grub/grub.cfg` => Add the following entry:
+```
+### BEGIN myOS ###
+ menuentry 'myOS' {
+ 	multiboot /boot/kernel.bin
+	boot
+ }
+### END myOS ###
+```
+- On starting the PC, grub bootloader will display the different OS you can load, one among them will be myOS, which you can select using arrow keys in the keyboard and by hitting enter to load it.  
+2. Boot on a virtualbox with iso file already added to it: `make run`
+3. `make stop` to stop the virtualbox from running the OS.
+4. Global Descriptor Table, Memory Segments with kernel and user space divided into unused, null, code and data segements.
 
-More to be added...
+### References:
+1. https://wiki.osdev.org/Main_Page
+2. Writing a Simple Operating System — from Scratch by Nick Blundell.
+3. x86-64 Assembly Language Programming with Ubuntu by Ed Jorgensen, Ph.D.
+
+More to be follow...
