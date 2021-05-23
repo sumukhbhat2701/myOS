@@ -25,7 +25,7 @@ class Port_8bits_slow : public Port_8bits
         Port_8bits_slow(u16_t port_number);
         ~Port_8bits_slow();
         virtual void write(u8_t data);
-        // inherit read(), non eed to overwrite
+        // inherit read(), non need to overwrite
 };
 
 class Port_16bits : public Port

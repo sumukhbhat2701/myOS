@@ -18,11 +18,15 @@
 - On starting the PC, grub bootloader will display the different OS you can load, one among them will be myOS, which you can select using arrow keys in the keyboard and by hitting enter to load it.  
 2. Boot on a virtualbox with iso file already added to it: `make run`
 3. `make stop` to stop the virtualbox from running the OS.
-4. Global Descriptor Table, Memory Segments with kernel and user space divided into unused, null, code and data segements.
-
-### References:
-1. https://wiki.osdev.org/Main_Page
-2. Writing a Simple Operating System — from Scratch by Nick Blundell.
-3. x86-64 Assembly Language Programming with Ubuntu by Ed Jorgensen, Ph.D.
+4. Global Descriptor Table(GDT), Memory Segments with kernel and user space divided into unused, null, code and data segements.
+5. Software to communicate with hardware(via PIC - Port Interface card) and interrupt descriptor table(IDT) to handle interrupts accordingly from IO devices.
 
 More to be follow...
+
+### References:
+1. [osdev.org](https://wiki.osdev.org/Main_Page)
+2. [WYOOS](https://www.youtube.com/playlist?list=PLHh55M_Kq4OApWScZyPl5HhgsTJS9MZ6M)
+3. Writing a Simple Operating System — from Scratch by Nick Blundell.
+4. x86-64 Assembly Language Programming with Ubuntu by Ed Jorgensen, Ph.D.
+
+

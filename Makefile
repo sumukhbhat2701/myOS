@@ -19,8 +19,9 @@
 # Specify to the compiler that there are no builtin memory managers, no stdlibs, no exception handlers etc.
 GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptions -fno-leading-underscore
 ASPARAMS = --32
+LDPARAMS = -melf_i386
 
-OBJECT_FILES = loader.o kernel.o gdt.o port.o
+OBJECT_FILES = loader.o kernel.o interrupts.o interruptstubs.o gdt.o port.o
 
 %.o: %.cpp
 	g++ ${GPPPARAMS} -o $@ -c $<

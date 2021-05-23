@@ -1,4 +1,5 @@
 #include "gdt.h"
+#include "interrupts.h"
 
 // Write our own print function as we do not have IO header files in our new OS space.
 void print(char* s)
@@ -63,6 +64,9 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	print("Yay! You made it!\n");
 
 	GlobalDescriptorTable gdt;
+	// InterruptManager interrupts(&gdt);
+
+	// interrupts.activate();
 
 	// infinite loop as kernel should be running at all times	
 	while(1);
