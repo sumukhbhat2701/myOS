@@ -20,7 +20,8 @@
 GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptions -fno-leading-underscore
 ASPARAMS = --32
 
-OBJECT_FILES = loader.o kernel.o gdt.o
+OBJECT_FILES = loader.o kernel.o gdt.o port.o
+
 %.o: %.cpp
 	g++ ${GPPPARAMS} -o $@ -c $<
 	
@@ -58,8 +59,10 @@ run: kernel.iso
 stop: kernel.iso	
 	killall VirtualBoxVM
 
-
-
+# A phony target is one that is not really the name of a file; rather it is just a name for a recipe to be executed when you make an explicit request.
+.PHONY: clean
+clean:
+	rm -f $(OBJECT_FILES) kernel.bin kernel.iso
 
 
 
