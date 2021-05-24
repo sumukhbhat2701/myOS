@@ -4,7 +4,7 @@
 
 class GlobalDescriptorTable
 {
-    private:
+    public:
         class SegmentDescriptor
         {
             private:
@@ -20,16 +20,17 @@ class GlobalDescriptorTable
                 u32_t compute_limit();
 
         } __attribute__((packed)); // inform the compiler to keep the values "byte-perfect" and not make changes interms of optimization or anything else
-        SegmentDescriptor nullSegmentSelector;
-        SegmentDescriptor unusedSegmentSelector;
-        SegmentDescriptor codeSegmentSelector;
-        SegmentDescriptor dataSegmentSelector;
-    
-    public:
+
         GlobalDescriptorTable();
         ~GlobalDescriptorTable();
         u16_t compute_offset_codeSegmentSelector();
         u16_t compute_offset_dataSegmentSelector();
+        
+    private:
+        SegmentDescriptor nullSegmentSelector;
+        SegmentDescriptor unusedSegmentSelector;
+        SegmentDescriptor codeSegmentSelector;
+        SegmentDescriptor dataSegmentSelector;
 
 };
 

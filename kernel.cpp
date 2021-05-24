@@ -52,9 +52,9 @@ extern "C" ctor end_ctor;
 // invoke all the ctors of global objects stored between start_ctor and end_ctor manually. 
 extern "C" void call_ctors()
 {
-	for(ctor i = start_ctor;i != end_ctor;i++)
+	for(ctor* c = &start_ctor;c != &end_ctor;c++)
 	{
-		(*i)();
+		(*c)();
 	}
 }
 
@@ -64,9 +64,9 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	print("Yay! You made it!\n");
 
 	GlobalDescriptorTable gdt;
-	// InterruptManager interrupts(&gdt);
+	InterruptManager interrupts(&gdt);
 
-	// interrupts.activate();
+	interrupts.activate();
 
 	// infinite loop as kernel should be running at all times	
 	while(1);

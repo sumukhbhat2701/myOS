@@ -30,13 +30,16 @@ pic_slave_data(0xA1)
     u16_t code_segment = gdt->compute_offset_codeSegmentSelector();
     const u8_t IDT_INTERRUPT_GATE = 0xE;
 
+    // initialize all the IDT entries to interrupt_ignore()
     for(u16_t i = 0; i<256; i++)
     {
         set_interrupt_descriptor_table_entry(i, code_segment, &ignore_interrupt_request, 0, IDT_INTERRUPT_GATE);
     }
 
+    // Update the entries we want to handle
+    // 0x00 - timer ; pos = IRQ_BASE+0x00 = 0x20 + 0x00 = 0x20 ; IRQ_BASE is defined as 0x20 in interruptstub.s
     set_interrupt_descriptor_table_entry(0x20, code_segment, &handle_interrupt_request_0x00, 0, IDT_INTERRUPT_GATE);
-
+    // 0x01 - timer ; pos = IRQ_BASE+0x01 = 0x21 + 0x00 = 0x20
     set_interrupt_descriptor_table_entry(0x21, code_segment, &handle_interrupt_request_0x01, 0, IDT_INTERRUPT_GATE);
 
     pic_master_command.write(0x11);
@@ -57,6 +60,7 @@ pic_slave_data(0xA1)
     interruptDescriptorTablePointer idt;
     idt.size = 256*sizeof(GateDescriptor) - 1;
     idt.base = (u32_t)InterruptDescriptorTable;
+    // load interrupt descriptor table - lidt
     asm volatile("lidt %0" : : "m"(idt));
 }
 

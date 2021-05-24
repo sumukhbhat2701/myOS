@@ -42,6 +42,7 @@ class InterruptManager
 
         static u32_t interrupt_handler(u8_t interrupt_id, u32_t esp);
 
+        // ignore the interrupts from devices whose routines are not configured
         static void ignore_interrupt_request();
         // timer interrupt
         static void handle_interrupt_request_0x00();
