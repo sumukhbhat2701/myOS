@@ -93,6 +93,8 @@ pic_slave_data(0xA1)
     set_interrupt_descriptor_table_entry(0x20, code_segment, &handle_interrupt_request_0x00, 0, IDT_INTERRUPT_GATE);
     // 0x01 - keyboard ; pos = IRQ_BASE+0x01 = 0x20 + 0x01 = 0x21
     set_interrupt_descriptor_table_entry(0x21, code_segment, &handle_interrupt_request_0x01, 0, IDT_INTERRUPT_GATE);
+    // 0x01 - mouse ; pos = IRQ_BASE+0x01 = 0x20 + 0x02 = 0x22
+    set_interrupt_descriptor_table_entry(0x2C, code_segment, &handle_interrupt_request_0x0C, 0, IDT_INTERRUPT_GATE);
 
 
 

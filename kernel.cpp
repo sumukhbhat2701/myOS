@@ -2,7 +2,7 @@
 #include "interrupts.h"
 #include "types.h"
 #include "keyboard.h"
-
+#include "mouse.h"
 // Write our own print function as we do not have IO header files in our new OS space.
 void print(char* s)
 {
@@ -11,6 +11,8 @@ void print(char* s)
 	// As we need alternate blocks, we use unsigned short(u16_t) which is 2 bytes instead of 4 incase of unsigned int(u32_t). screen+i by 2*i bytes incase of u16_t, which is 4*i bytes incase of u32_t. 
 	// As we need only 2nd byte of every 2 bytes of u16_t, we 'and' the mem location with 2 bytes with 0xFF00 and 'or' with 1 byte of character to be written.  
 	
+	// static because static variable have lifetime of whole program run, rather than once the functions scope ends as for every key pressed/released this function is invoked and the previous value of static wouldn't be remembered if non-static.
+
 	// cursor location - (x,y)
 	static u8_t x = 0, y = 0;
 		
@@ -69,6 +71,7 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	InterruptManager interrupts(&gdt);
 
 	KeyboardDriver keyboard(&interrupts);
+	MouseDriver mouse(&interrupts);
 
 	interrupts.activate();
 

@@ -60,11 +60,15 @@ class InterruptManager
         static void handle_interrupt_request_0x00();
         // keyboard interrupt
         static void handle_interrupt_request_0x01();
+        // mouse interrupt
+        static void handle_interrupt_request_0x0C();
 
-        // timer interrupt
+        // timer exception
         static void handle_exception_0x00();
-        // keyboard interrupt
+        // keyboard exception
         static void handle_exception_0x01();
+        // mouse exception
+        static void handle_exception_0x0C();
 };
 
 class InterruptHandler
@@ -77,6 +81,8 @@ class InterruptHandler
         ~InterruptHandler();
 
     public:
+        // Why virtual?
+        // MAYBE: virtual because we need to override this function, this case friend class
         virtual u32_t interrupt_handler(u32_t esp);
 };
 

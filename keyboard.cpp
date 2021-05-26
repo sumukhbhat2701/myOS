@@ -42,11 +42,12 @@ KeyboardDriver::~KeyboardDriver() { }
 u32_t KeyboardDriver::interrupt_handler(u32_t esp)
 {
     u8_t key = data_port.read();
-    // key>=0x80 are key release, which we don't need. We want only keypress interrupt to find which key is presses. Otherwise we get 2 values on the screen when only 1 key is pressed.
+    // key>=0x80 are key release, which we don't need(except 0xAA and 0xB6 which are used to make characters lower case once key release). We want only keypress interrupt to find which key is presses. Otherwise we get 2 values on the screen when only 1 key is pressed.
     // ignore keys printed like when numlock etc are on.
-    if(key < 0x80 && key != 0xFA && key != 0x45 && key != 0xC5)
+    if((key < 0x80 || key == 0xAA || key == 0xB6) && key != 0xFA && key != 0x45 && key != 0xC5)
     {
-        u8_t shift = 0;
+        // static because static variable have lifetime of whole program run, rather than once the functions scope ends as for every key pressed/released this function is invoked and the previous value of static wouldn't be remembered if non-static.
+        static u8_t shift = 0;
         switch(key)
         {
             case 0x02: if(shift) print("!"); else print("1"); break;
@@ -105,8 +106,6 @@ u32_t KeyboardDriver::interrupt_handler(u32_t esp)
 
             case 0x1C: print("\n"); break;
             case 0x39: print(" "); break;
-            // case 
-            // case 0x33: if(shift) print("") 
 
             // left and right shift key press interrupt
             case 0x2A: case 0x36: shift = 1; break;

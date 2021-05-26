@@ -23,9 +23,10 @@ _ZN16InterruptManager29handle_interrupt_request_\num\()Ev:
     jmp int_bottom
 .endm
 
-// call different interrupts' routine with thier id(we define it), 0x00 - timer, 0x01 - keyboard
+// call different interrupts' routine with thier id(we define it), 0x00+IRQ_BASE=0x20 - timer, 0x01+IRQ_BASE=0x21 - keyboard, 0x0C+IRQ_BASE=0x2C - mouse (IRQ_BASE = 0x20)
 handle_interrupt_request 0x00
 handle_interrupt_request 0x01
+handle_interrupt_request 0x0C
 
 
 
