@@ -1,5 +1,7 @@
 #include "gdt.h"
 #include "interrupts.h"
+#include "types.h"
+#include "keyboard.h"
 
 // Write our own print function as we do not have IO header files in our new OS space.
 void print(char* s)
@@ -65,6 +67,8 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 
 	GlobalDescriptorTable gdt;
 	InterruptManager interrupts(&gdt);
+
+	KeyboardDriver keyboard(&interrupts);
 
 	interrupts.activate();
 

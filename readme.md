@@ -19,7 +19,8 @@
 2. Boot on a virtualbox with iso file already added to it: `make run`
 3. `make stop` to stop the virtualbox from running the OS.
 4. Global Descriptor Table(GDT), Memory Segments with kernel and user space divided into unused, null, code and data segements.
-5. Software to communicate with hardware(via PIC - Port Interface card) and interrupt descriptor table(IDT) to handle interrupts accordingly from IO devices.
+5. Software to communicate with hardware ports(via PIC - Port Interface card) and interrupt descriptor table(IDT) to handle interrupts accordingly from IO devices - timer(hardware clock), keyboard, mouse.
+6. Keyboard driver code.
 
 More to be follow...
 

@@ -81,7 +81,7 @@ Port_8bits_slow::~Port_8bits_slow() {}
 // stall the execution for a moment using garbage instruction until the port is done writing data 
 void Port_8bits_slow::write(u8_t data)
 {
-    __asm__ volatile("outb %0, %1\njmp 1f\n1: jmp 1f\n1:": : "a"(data), "Nd"(port_number));
+    __asm__ volatile("outb %0, %1\njmp 1f\n1: jmp 1f\n1:" : : "a" (data), "Nd" (this->port_number));
 }
 
 

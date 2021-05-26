@@ -17,11 +17,11 @@
 
 # Any OS initially loads in 32-bit compatibility mode
 # Specify to the compiler that there are no builtin memory managers, no stdlibs, no exception handlers etc.
-GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptions -fno-leading-underscore
+GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
-OBJECT_FILES = loader.o kernel.o interrupts.o interruptstubs.o gdt.o port.o
+OBJECT_FILES = loader.o kernel.o interrupts.o interruptstubs.o gdt.o port.o keyboard.o
 
 %.o: %.cpp
 	g++ ${GPPPARAMS} -o $@ -c $<
