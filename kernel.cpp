@@ -3,6 +3,7 @@
 #include "types.h"
 #include "keyboard.h"
 #include "mouse.h"
+#include "driver.h"
 // Write our own print function as we do not have IO header files in our new OS space.
 void print(char* s)
 {
@@ -14,6 +15,7 @@ void print(char* s)
 	// static because static variable have lifetime of whole program run, rather than once the functions scope ends as for every key pressed/released this function is invoked and the previous value of static wouldn't be remembered if non-static.
 
 	// cursor location - (x,y)
+	
 	static u8_t x = 0, y = 0;
 		
 	static u16_t* screen = (u16_t *)0xb8000;
@@ -47,6 +49,15 @@ void print(char* s)
 	}
 }
 
+void print_hex(u32_t key)
+{
+	char *message = "0x00";
+	char *hexa = "0123456789ABCDEF";
+	message[2] = hexa[(key >> 4) & 0x0F];
+	message[3] = hexa[key & 0x0F];
+	print(message);
+}
+
 // extern "C" makes a function-name in C++ have C compilation to form a obj(.o) file (compiler does not mangle the name). As kernel_main is accessed in loader.s as kernel_main itself and as g++(C++) compiler changes name of functions while linking, we need to make use of C compilation method for this function.
 
 typedef void (*ctor)();
@@ -70,9 +81,21 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	GlobalDescriptorTable gdt;
 	InterruptManager interrupts(&gdt);
 
-	KeyboardDriver keyboard(&interrupts);
-	MouseDriver mouse(&interrupts);
+	print("Initializing hardware, Step1...\n");
+	DriverManager driverManager;
 
+	PrintKeyboardEventHandler keyboardEventHandler;
+	KeyboardDriver keyboard(&interrupts, &keyboardEventHandler);
+	driverManager.add_driver(&keyboard);
+
+	DisplayMouseEventHandler mouseEventHandler;
+	MouseDriver mouse(&interrupts, &mouseEventHandler);
+	driverManager.add_driver(&mouse);
+
+	print("Initializing hardware, Step2...\n");
+	driverManager.activate_all();
+
+	print("Initializing hardware, Step3...\n");
 	interrupts.activate();
 
 	// infinite loop as kernel should be running at all times	
