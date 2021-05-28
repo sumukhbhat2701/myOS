@@ -1,4 +1,7 @@
-#include "interrupts.h"
+#include <hardware_communication/interrupts.h>
+
+using namespace myOS::common;
+using namespace myOS::hardware_communication;
 
 // It is defined in kernel.cpp, not in any other header file, so we declare it first
 void print(char* s);

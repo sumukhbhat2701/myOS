@@ -17,16 +17,20 @@
 
 # Any OS initially loads in 32-bit compatibility mode
 # Specify to the compiler that there are no builtin memory managers, no stdlibs, no exception handlers etc.
-GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
+# -I<folder_name> will tell the compiler that all .h files are in folder_name("include" in our case) and we can also use #include<filename.h> from folder_name instead of root of the project
+GPPPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
-OBJECT_FILES = loader.o kernel.o driver.o interrupts.o mouse.o interruptsAssembly.o gdt.o port.o keyboard.o
+OBJECT_FILES = obj/loader.o obj/kernel.o obj/drivers/driver.o obj/hardware_communication/interrupts.o obj/drivers/mouse.o obj/hardware_communication/interruptsAssembly.o obj/gdt.o obj/hardware_communication/port.o obj/drivers/keyboard.o
 
-%.o: %.cpp
+obj/%.o: src/%.cpp
+	# -p indicates to create new directiories only if they do not exist
+	mkdir -p ${@D}
 	g++ ${GPPPARAMS} -o $@ -c $<
 	
-%.o : %.s
+obj/%.o : src/%.s
+	mkdir -p ${@D}
 	as ${ASPARAMS} -o $@ $<
 
 kernel.bin: linker.ld ${OBJECT_FILES}
@@ -63,7 +67,7 @@ stop: kernel.iso
 # A phony target is one that is not really the name of a file; rather it is just a name for a recipe to be executed when you make an explicit request.
 .PHONY: clean
 clean:
-	rm -f $(OBJECT_FILES) kernel.bin kernel.iso
+	rm -rf obj kernel.bin kernel.iso
 
 
 

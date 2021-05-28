@@ -1,9 +1,15 @@
-#include "gdt.h"
-#include "interrupts.h"
-#include "types.h"
-#include "keyboard.h"
-#include "mouse.h"
-#include "driver.h"
+#include <gdt.h>
+#include <hardware_communication/interrupts.h>
+#include <common/types.h>
+#include <drivers/keyboard.h>
+#include <drivers/mouse.h>
+#include <drivers/driver.h>
+
+using namespace myOS::common;
+using namespace myOS::hardware_communication;
+using namespace myOS::drivers;
+using namespace myOS;
+
 // Write our own print function as we do not have IO header files in our new OS space.
 void print(char* s)
 {
@@ -81,8 +87,9 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	GlobalDescriptorTable gdt;
 	InterruptManager interrupts(&gdt);
 
-	print("Initializing hardware, Step1...\n");
+	print("Initializing hardware, Step1...");
 	DriverManager driverManager;
+	print("Done with Step1\n");
 
 	PrintKeyboardEventHandler keyboardEventHandler;
 	KeyboardDriver keyboard(&interrupts, &keyboardEventHandler);
@@ -92,11 +99,13 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	MouseDriver mouse(&interrupts, &mouseEventHandler);
 	driverManager.add_driver(&mouse);
 
-	print("Initializing hardware, Step2...\n");
+	print("Initializing hardware, Step2...");
 	driverManager.activate_all();
+	print("Done with Step2\n");
 
-	print("Initializing hardware, Step3...\n");
+	print("Initializing hardware, Step3...");
 	interrupts.activate();
+	print("Done with Step3\n");
 
 	// infinite loop as kernel should be running at all times	
 	while(1);

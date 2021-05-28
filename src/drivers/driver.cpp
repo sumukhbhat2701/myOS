@@ -1,4 +1,8 @@
-#include "driver.h"
+#include <drivers/driver.h>
+#include <common/types.h>
+
+using namespace myOS::common;
+using namespace myOS::drivers;
 
 Driver::Driver()
 {
