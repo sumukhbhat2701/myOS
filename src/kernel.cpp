@@ -4,6 +4,7 @@
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
 #include <drivers/driver.h>
+#include <hardware_communication/pci.h>
 
 using namespace myOS::common;
 using namespace myOS::hardware_communication;
@@ -98,6 +99,9 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	DisplayMouseEventHandler mouseEventHandler;
 	MouseDriver mouse(&interrupts, &mouseEventHandler);
 	driverManager.add_driver(&mouse);
+
+	PCIController pciController;
+	pciController.select_drivers(&driverManager);
 
 	print("Initializing hardware, Step2...");
 	driverManager.activate_all();

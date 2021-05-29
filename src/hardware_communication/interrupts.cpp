@@ -9,7 +9,7 @@ void print_hex(u32_t key);
 
 InterruptManager::GateDescriptor InterruptManager::InterruptDescriptorTable[256];
 
-// static members have to compulsory initialized
+// static members have to compulsory initialized and we say that there are no active interrupt manager in the beginning
 InterruptManager* InterruptManager::ActiveInterruptManager = 0;
 
 u32_t InterruptManager::interrupt_handler_main(u8_t interrupt_id, u32_t esp)
@@ -110,7 +110,6 @@ pic_slave_data(0xA1)
     pic_master_command.write(0x11);
     pic_slave_command.write(0x11);
 
-    // different combination of interrupts:
     pic_master_data.write(0x20);
     pic_slave_data.write(0x28);
 

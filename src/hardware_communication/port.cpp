@@ -3,6 +3,10 @@
 using namespace myOS::common;
 using namespace myOS::hardware_communication;
 
+
+// instead of writing one class for port, we write different classes based on the bandwidth of data read/written.
+
+
 Port::Port(u16_t port_number)
 {
     this->port_number = port_number;

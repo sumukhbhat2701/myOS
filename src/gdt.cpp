@@ -31,15 +31,16 @@ u16_t GlobalDescriptorTable::compute_offset_codeSegmentSelector()
 
 GlobalDescriptorTable::SegmentDescriptor::SegmentDescriptor(u32_t base, u32_t limit, u8_t flags)
 {
-    u8_t* target = (u8_t *)this;
+    u8_t* entry = (u8_t *)this;
+    // encode base and limit
     if(limit <= 65536) 
     {
-        // <= 2^16 (16 bit address space => 16 bit limit) => target[6] = 0xC0
-        target[6] = 0x40;
+        // <= 2^16 (16 bit address space => 16 bit limit) => entry[6] = 0xC0
+        entry[6] = 0x40;
     }
     else 
     {
-        // 32 bit address space => target[6] = 0xC0
+        // 32 bit address space => entry[6] = 0xC0
         // Now we have to squeeze the (32-bit) limit into 2.5 regiters (20-bit).
         // This is done by discarding the 12 least significant bits, but this
         // is only legal, if they are all ==1, so they are implicitly still there
@@ -54,25 +55,26 @@ GlobalDescriptorTable::SegmentDescriptor::SegmentDescriptor(u32_t base, u32_t li
         else    
             limit = limit >> 12;
         
-        target[6] = 0xC0;
+        entry[6] = 0xC0;
 
     }
 
-    target[0] = limit & 0xFF;
-    target[1] = (limit >> 8) & 0xFF;
-    target[6] |= (limit >> 16) & 0xF;
+    entry[0] = limit & 0xFF;
+    entry[1] = (limit >> 8) & 0xFF;
+    entry[6] |= (limit >> 16) & 0xF;
 
-    target[2] = base & 0xFF;
-    target[3] = (base >> 8) & 0xFF;
-    target[4] = (base >> 16) & 0xFF;
-    target[7] = (base >> 24) & 0xFF;
+    entry[2] = base & 0xFF;
+    entry[3] = (base >> 8) & 0xFF;
+    entry[4] = (base >> 16) & 0xFF;
+    entry[7] = (base >> 24) & 0xFF;
 
-    target[5] = flags;
+    entry[5] = flags;
 
 }
 
 u32_t GlobalDescriptorTable::SegmentDescriptor::compute_base()
 {
+    // decode
     u8_t* target = (u8_t *)this;
     u32_t result = target[7];
     result = (result << 8) + target[4];
@@ -83,6 +85,7 @@ u32_t GlobalDescriptorTable::SegmentDescriptor::compute_base()
 
 u32_t GlobalDescriptorTable::SegmentDescriptor::compute_limit()
 {
+    // decode
     u8_t* target = (u8_t *)this;
     u32_t result = target[6] & 0xF;
     result = (result << 8) + target[1];
@@ -93,3 +96,8 @@ u32_t GlobalDescriptorTable::SegmentDescriptor::compute_limit()
     
     return result;
 }
+
+// GDT entry:
+// | base(1 byte) | flags(1/2 byte) | limit(1/2 byte) | Access rights(1 byte) | base(3 bytes) | limit(2 bytes) |  
+// 8 bytes   <----------------------------------------------------------------------------------------------   0
+//    entry[7]       entry[6]          entry[6]              entry[5]           entry[4,3,2]      entry[1,0]
