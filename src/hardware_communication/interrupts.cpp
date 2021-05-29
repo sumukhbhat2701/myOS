@@ -79,8 +79,11 @@ pic_master_data(0x21),
 pic_slave_command(0xA0),
 pic_slave_data(0xA1)
 {
+    // IDT entry:
+    // https://wiki.osdev.org/Interrupt_Descriptor_Table
+    
     u16_t code_segment = gdt->compute_offset_codeSegmentSelector();
-    const u8_t IDT_INTERRUPT_GATE = 0xE;
+    const u8_t IDT_INTERRUPT_GATE = 0xE; // representing 32-bit interrupt trap (0x6 for 16-bit one)
 
     // initialize all the IDT entries to interrupt_ignore()
     for(u16_t i = 0; i<256; i++)
@@ -173,3 +176,12 @@ u32_t InterruptHandler::interrupt_handler(u32_t esp)
 {
     return esp;
 }
+
+// IDT entry:
+// https://wiki.osdev.org/Interrupt_Descriptor_Table
+
+// This is similar to the GDT, except:
+// The first entry (at zero offset) is used in the IDT.
+// There are 256 interrupts (0..255), so IDT should have 256 entries, each entry corresponding to a specific interrupt.
+// It can contain more or less than 256 entries. More entries are ignored. When an interrupt or exception is invoked whose entry is not present, an exception 
+// is raised that tells the number of the missing IDT entry, and even whether it was hardware or software interrupt. There should therefore be at least enough entries so an exception can be caught.

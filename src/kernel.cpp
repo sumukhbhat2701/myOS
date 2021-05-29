@@ -86,29 +86,29 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	print("Yay! You made it!\n");
 
 	GlobalDescriptorTable gdt;
-	InterruptManager interrupts(&gdt);
+	InterruptManager interruptManager(&gdt);
 
 	print("Initializing hardware, Step1...");
 	DriverManager driverManager;
 	print("Done with Step1\n");
 
 	PrintKeyboardEventHandler keyboardEventHandler;
-	KeyboardDriver keyboard(&interrupts, &keyboardEventHandler);
+	KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
 	driverManager.add_driver(&keyboard);
 
 	DisplayMouseEventHandler mouseEventHandler;
-	MouseDriver mouse(&interrupts, &mouseEventHandler);
+	MouseDriver mouse(&interruptManager, &mouseEventHandler);
 	driverManager.add_driver(&mouse);
 
 	PCIController pciController;
-	pciController.select_drivers(&driverManager);
+	pciController.select_drivers(&driverManager, &interruptManager);
 
 	print("Initializing hardware, Step2...");
 	driverManager.activate_all();
 	print("Done with Step2\n");
 
 	print("Initializing hardware, Step3...");
-	interrupts.activate();
+	interruptManager.activate();
 	print("Done with Step3\n");
 
 	// infinite loop as kernel should be running at all times	

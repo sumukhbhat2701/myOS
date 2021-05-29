@@ -102,3 +102,12 @@ NOTE:
 - Static+member+self referential pointers can access both static and non-static member functions using ->. 
 - Static member function can only access static data member, other static member functions and any other functions from outside the class.
 */
+
+// IDT entry:
+// https://wiki.osdev.org/Interrupt_Descriptor_Table
+
+// This is similar to the GDT, except:
+// The first entry (at zero offset) is used in the IDT.
+// There are 256 interrupts (0..255), so IDT should have 256 entries, each entry corresponding to a specific interrupt.
+// It can contain more or less than 256 entries. More entries are ignored. When an interrupt or exception is invoked whose entry is not present, an exception 
+// is raised that tells the number of the missing IDT entry, and even whether it was hardware or software interrupt. There should therefore be at least enough entries so an exception can be caught.

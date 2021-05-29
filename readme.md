@@ -22,14 +22,15 @@
 4. Global Descriptor Table(GDT), Memory Segments with kernel and user space divided into unused, null, code and data segements.
 5. Software to communicate with hardware ports(via PIC - Port Interface card) and interrupt descriptor table(IDT) to handle interrupts accordingly from IO devices - timer(hardware clock), keyboard, mouse.
 6. Keyboard and mouse driver code. All driver code have required abstractions.
-7. Software support for peripheral component interconnect(PCI) to support other hardware.
+7. Software support for peripheral component interconnect(PCI) along with Base Address register(BAR).
 
 More to be follow...
 
 ### References:
 1. [osdev.org](https://wiki.osdev.org/Main_Page)
-2. [WYOOS](https://www.youtube.com/playlist?list=PLHh55M_Kq4OApWScZyPl5HhgsTJS9MZ6M)
-3. Writing a Simple Operating System — from Scratch by Nick Blundell.
-4. x86-64 Assembly Language Programming with Ubuntu by Ed Jorgensen, Ph.D.
+2. [lowlevel.eu](http://www.lowlevel.eu/wiki/Lowlevel:Portal)
+3. [WYOOS](https://www.youtube.com/playlist?list=PLHh55M_Kq4OApWScZyPl5HhgsTJS9MZ6M)
+4. Writing a Simple Operating System — from Scratch by Nick Blundell.
+5. x86-64 Assembly Language Programming with Ubuntu by Ed Jorgensen, Ph.D.
 
 

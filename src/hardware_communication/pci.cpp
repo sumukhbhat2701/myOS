@@ -43,12 +43,13 @@ u8_t PCIController::device_has_functions(u16_t bus_id,u16_t device_id)
     return read(bus_id, device_id, 0, (0x0E) & (1 << 7));
 }
 
-void PCIController::select_drivers(DriverManager* driverManager)
+void PCIController::select_drivers(DriverManager* driverManager, InterruptManager *interruptManager)
 {
     // list all the devices on the PCI which is managed by the driverManager
-    // equivalent to "lspci" and "lsusb" command on the linux/unix shells.
+    // equivalent to "lspci" (additional flags: -n ,-x) and "lsusb" command on the linux/unix shells.
     for(u8_t bus = 0; bus < 8; bus++)
     {
+        // vendor id => company's name + unique number for a hardware
         for(u8_t device = 0; device < 32; device++)
         {
             u8_t num_of_functions = PCIController::device_has_functions(bus, device) ? 8 : 1;
@@ -58,7 +59,26 @@ void PCIController::select_drivers(DriverManager* driverManager)
 
                 if(device_.vendor_id == 0 || device_.vendor_id == 0xFFFF)
                 {
-                    break;
+                    continue;
+                }
+
+                // bar - base address register
+                for(u8_t bar_num; bar_num < 6; bar_num++)
+                {
+                    BaseAddressRegister bar = get_base_address_register(bus, device, function, bar_num);
+                    // if address is set and it is of type io
+                    if(bar.address && (bar.type == io))
+                    {
+                        // written as port_number(except 2 low bits) in BAR incase of IO and address(except 4 bits) in mem mapped
+                        device_.port_base = (u32_t)bar.address;
+                    }
+
+                    Driver* driver = get_driver(device_, interruptManager);
+                    // if we get a driver
+                    if(driver != 0)
+                    {
+                        driverManager->add_driver(driver);
+                    }
                 }
 
                 print("PCI BUS: ");
@@ -110,3 +130,79 @@ PCIDeviceDescriptor::~PCIDeviceDescriptor()
 {
 
 }
+
+Driver* PCIController::get_driver(PCIDeviceDescriptor device, InterruptManager* interruptManager)
+{
+    switch(device.vendor_id)
+    {
+        // AMD
+        case 0x1022: 
+        {
+            switch(device.device_id)
+            {
+                // am79c973
+                case 0x2000: 
+                    print("You are using: AMD am79c973\n");
+                    break;
+            }
+        }
+        break;
+
+        case 0x8086: // Intel
+            break;
+    }
+
+    switch(device.class_id)
+    {
+        //graphics
+        case 0x03: 
+        {
+            switch(device.subclass_id)
+            {
+                //VGA
+                case 0x00:
+                    break;
+            }
+        }
+        break;
+    }
+
+    return 0;
+}
+
+BaseAddressRegister PCIController:: get_base_address_register(u16_t bus, u16_t device, u16_t function, u16_t bar)
+{
+    BaseAddressRegister res;
+    u32_t header_type = read(bus, device, function, 0x0E) & 0x7F;
+    u32_t maxBARS = 6 - (4*header_type);
+    if(bar >= maxBARS)
+        return res;
+
+    u32_t bar_value = read(bus, device, function, 0x10 + 4*bar);
+    res.type = (bar_value & 1) ? io : memory_mapping;
+    
+    u32_t temp;
+    if(res.type == memory_mapping)
+    {
+        // right shift ignores the last type bit and &3 checks if 2nd and 3rd bit values are 00 == 0, 01 == 1 or 02 == 2
+        switch((bar_value >> 1) & 0x3)
+        {
+            // we are not bothering about memory mapped in the code!
+            case 0: // 00 - 32 bit mode
+            case 1: // 01 - 20 bit mode
+            case 2: // 10 - 64 bit mode
+            break;
+        }
+        // check the 4th bit
+        res.prefetchable = (((bar_value >> 0x3) & 0x1) == 0x1);
+
+    }
+    else // io
+    {
+        // remove the last 2 bits - type and reserved
+        // bar_value is the port number we use for communication
+        res.address = (u8_t *)(bar_value & ~0x3);
+        res.prefetchable = 0;
+    }
+}
+
