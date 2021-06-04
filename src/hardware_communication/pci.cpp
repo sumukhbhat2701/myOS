@@ -22,7 +22,7 @@ PCIController::~PCIController()
 u32_t PCIController::read(u16_t bus_id,u16_t device_id,u16_t function_id,u32_t register_offset)
 {
     // combined id with first bit set
-    u32_t id = (0x1 << 31) | ((bus_id & 0xFF) << 16) | ((device_id & 0x1F) << 11) | ((function_id << 0x07) << 8) | ((register_offset) & 0xFC);
+    u32_t id = (0x1 << 31) | ((bus_id & 0xFF) << 16) | ((device_id & 0x1F) << 11) | ((function_id & 0x07) << 8) | ((register_offset) & 0xFC);
     command_port.write(id);
     u32_t result = data_port.read();
     // as u_32(int) is 4 bytes, 8 bits each but a device is represented by any bit, we must %4 and *8 to the register offset and get the corresponding bit in the result
@@ -33,20 +33,21 @@ u32_t PCIController::read(u16_t bus_id,u16_t device_id,u16_t function_id,u32_t r
 
 void PCIController::write(u16_t bus_id,u16_t device_id,u16_t function_id,u32_t register_offset, u32_t value)
 {
-    u32_t id = (0x1 << 31) | ((bus_id & 0xFF) << 16) | ((device_id & 0x1F) << 11) | ((function_id << 0x07) << 8) | ((register_offset) & 0xFC);
+    u32_t id = (0x1 << 31) | ((bus_id & 0xFF) << 16) | ((device_id & 0x1F) << 11) | ((function_id & 0x07) << 8) | ((register_offset) & 0xFC);
     command_port.write(id);
     data_port.write(value);
 }
 
 u8_t PCIController::device_has_functions(u16_t bus_id,u16_t device_id)
 {
-    return read(bus_id, device_id, 0, (0x0E) & (1 << 7));
+    return read(bus_id, device_id, 0, (0x0E)) & (1 << 7);
 }
 
 void PCIController::select_drivers(DriverManager* driverManager, InterruptManager *interruptManager)
 {
     // list all the devices on the PCI which is managed by the driverManager
     // equivalent to "lspci" (additional flags: -n ,-x) and "lsusb" command on the linux/unix shells.
+
     for(u8_t bus = 0; bus < 8; bus++)
     {
         // vendor id => company's name + unique number for a hardware
@@ -61,9 +62,10 @@ void PCIController::select_drivers(DriverManager* driverManager, InterruptManage
                 {
                     continue;
                 }
+                
 
                 // bar - base address register
-                for(u8_t bar_num; bar_num < 6; bar_num++)
+                for(u8_t bar_num = 0; bar_num < 6; bar_num++)
                 {
                     BaseAddressRegister bar = get_base_address_register(bus, device, function, bar_num);
                     // if address is set and it is of type io
@@ -72,7 +74,6 @@ void PCIController::select_drivers(DriverManager* driverManager, InterruptManage
                         // written as port_number(except 2 low bits) in BAR incase of IO and address(except 4 bits) in mem mapped
                         device_.port_base = (u32_t)bar.address;
                     }
-
                     Driver* driver = get_driver(device_, interruptManager);
                     // if we get a driver
                     if(driver != 0)
@@ -81,6 +82,7 @@ void PCIController::select_drivers(DriverManager* driverManager, InterruptManage
                     }
                 }
 
+                // display the details of all the devices which is occupying pci ports
                 print("PCI BUS: ");
                 print_hex(bus & 0xFF);
 
@@ -98,7 +100,7 @@ void PCIController::select_drivers(DriverManager* driverManager, InterruptManage
                 print(", DEVICE: ");
                 print_hex((device_.device_id & 0xFF00) >> 8);
                 print_hex(device_.device_id & 0xFF);
-                print("\n");
+                print("; ");
             }
         }
     }
@@ -133,23 +135,28 @@ PCIDeviceDescriptor::~PCIDeviceDescriptor()
 
 Driver* PCIController::get_driver(PCIDeviceDescriptor device, InterruptManager* interruptManager)
 {
+    // identify specific devices and their drivers
     switch(device.vendor_id)
     {
-        // AMD
         case 0x1022: 
         {
             switch(device.device_id)
             {
-                // am79c973
+                // am79c973 - network chip (default for vm, change in network settings => advanced => adaptor type)
                 case 0x2000: 
-                    print("You are using: AMD am79c973\n");
+                    print("am79c973; ");
                     break;
+
+                // etc...
             }
         }
         break;
 
-        case 0x8086: // Intel
+        case 0x8086: // Intel devices
+            print("Intel; ");
             break;
+        
+        // etc...
     }
 
     switch(device.class_id)
@@ -161,6 +168,7 @@ Driver* PCIController::get_driver(PCIDeviceDescriptor device, InterruptManager* 
             {
                 //VGA
                 case 0x00:
+                    print("VGA; ");
                     break;
             }
         }
@@ -204,5 +212,6 @@ BaseAddressRegister PCIController:: get_base_address_register(u16_t bus, u16_t d
         res.address = (u8_t *)(bar_value & ~0x3);
         res.prefetchable = 0;
     }
+    return res;
 }
 

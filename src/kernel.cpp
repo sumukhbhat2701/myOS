@@ -91,16 +91,17 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	print("Initializing hardware, Step1...");
 	DriverManager driverManager;
 	print("Done with Step1\n");
-
+	
 	PrintKeyboardEventHandler keyboardEventHandler;
 	KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
 	driverManager.add_driver(&keyboard);
-
+	
 	DisplayMouseEventHandler mouseEventHandler;
 	MouseDriver mouse(&interruptManager, &mouseEventHandler);
 	driverManager.add_driver(&mouse);
-
+	
 	PCIController pciController;
+	
 	pciController.select_drivers(&driverManager, &interruptManager);
 
 	print("Initializing hardware, Step2...");
