@@ -3,7 +3,7 @@
 using namespace myOS::drivers;
 using namespace myOS::common;
 
-void VGA::write_registers(myOS::common::u8_t* registers)
+void VGA::write_registers(u8_t* registers)
 {
     // mischellaneous
     misc_port.write(*(registers++));
@@ -55,7 +55,7 @@ void VGA::write_registers(myOS::common::u8_t* registers)
 
 }
 
-myOS::common::u8_t* VGA::get_frame_buffer_segment()
+u8_t* VGA::get_frame_buffer_segment()
 {
     graphics_controller_index_port.write(0x06);
     u8_t segment_number = ((graphics_controller_data_port.read() >> 2) & 0x03); 
@@ -69,12 +69,12 @@ myOS::common::u8_t* VGA::get_frame_buffer_segment()
     }
 }
 
-void VGA::put_pixel(myOS::common::u32_t x, myOS::common::u32_t y, myOS::common::u8_t color_index)
+void VGA::put_pixel(s32_t x, s32_t y, u8_t color_index)
 {
     u8_t* pixel_address = get_frame_buffer_segment() + 320*y + x; 
     *pixel_address = color_index;
 }
-myOS::common::u8_t VGA::get_color_index(myOS::common::u8_t r, myOS::common::u8_t g, myOS::common::u8_t b)
+u8_t VGA::get_color_index(u8_t r, u8_t g, u8_t b)
 {
     // (0,0,0xA8) is blue
     if(r == 0 && g == 0 && b == 0xA8)
@@ -107,13 +107,13 @@ VGA::~VGA()
 }
 
 
-myOS::common::u8_t VGA::supports_mode(myOS::common::u32_t width, myOS::common::u32_t height, myOS::common::u32_t color_depth)
+u8_t VGA::supports_mode(u32_t width, u32_t height, u32_t color_depth)
 {
     // support only 320 x 200 x 8 dimensions
     return width == 320 && height == 200 && color_depth == 8;
 }
 
-myOS::common::u8_t VGA::set_mode(myOS::common::u32_t width, myOS::common::u32_t height, myOS::common::u32_t color_depth)
+u8_t VGA::set_mode(u32_t width, u32_t height, u32_t color_depth)
 {
     // return 0 if dimensions not supported
     if(!supports_mode(width, height, color_depth))
@@ -147,7 +147,20 @@ myOS::common::u8_t VGA::set_mode(myOS::common::u32_t width, myOS::common::u32_t 
 
 }
 
-void VGA::put_pixel(myOS::common::u32_t x, myOS::common::u32_t y, myOS::common::u8_t r, myOS::common::u8_t g, myOS::common::u8_t b)
+void VGA::put_pixel(s32_t x, s32_t y, u8_t r, u8_t g, u8_t b)
 {
     put_pixel(x, y, get_color_index(r, g, b));
 }
+
+void VGA::fill_rectangle(s32_t x, s32_t y, s32_t w, s32_t h, u8_t r, u8_t g, u8_t b)
+{
+    // set the whole screen to blue using the vga
+	for(u16_t Y = 0; Y<y+h; Y++)
+	{
+		for(u16_t X = 0; X<x+w; X++)
+		{
+			put_pixel(X, Y, r, g, b);
+		}
+	}
+}
+

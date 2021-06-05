@@ -44,9 +44,11 @@ namespace myOS
 
                 virtual myOS::common::u8_t supports_mode(myOS::common::u32_t width, myOS::common::u32_t height, myOS::common::u32_t color_depth);
                 virtual myOS::common::u8_t set_mode(myOS::common::u32_t width, myOS::common::u32_t height, myOS::common::u32_t color_depth);
-                virtual void put_pixel(myOS::common::u32_t x, myOS::common::u32_t y, myOS::common::u8_t r, myOS::common::u8_t g, myOS::common::u8_t b);
+                virtual void put_pixel(myOS::common::s32_t x, myOS::common::s32_t y, myOS::common::u8_t r, myOS::common::u8_t g, myOS::common::u8_t b);
                 // get index corresponding to (r, g, b) entries and use that instead of r, g, b values explicilty to put_pixels
-                virtual void put_pixel(myOS::common::u32_t x, myOS::common::u32_t y, myOS::common::u8_t color_index);
+                virtual void put_pixel(myOS::common::s32_t x, myOS::common::s32_t y, myOS::common::u8_t color_index);
+                virtual void fill_rectangle(myOS::common::s32_t x, myOS::common::s32_t y, myOS::common::s32_t w, myOS::common::s32_t h, myOS::common::u8_t r, myOS::common::u8_t g, myOS::common::u8_t b);
+
         };
     }
 }

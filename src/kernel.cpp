@@ -116,14 +116,7 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	print("Done with Step3\n");
 
 	vga.set_mode(320, 200, 8);
-	// set the whole screen to blue using the vga
-	for(u16_t y = 0; y<200; y++)
-	{
-		for(u16_t x = 0; x<320; x++)
-		{
-			vga.put_pixel(x, y, 0x00, 0x00, 0xA8);
-		}
-	}
+	vga.fill_rectangle(0, 0, 320, 200, 0, 0, 0xA8);
 
 
 	// infinite loop as kernel should be running at all times	
