@@ -23,6 +23,7 @@
 5. Software to communicate with hardware ports(via PIC - Port Interface card) and interrupt descriptor table(IDT) to handle interrupts accordingly from IO devices - timer(hardware clock), keyboard, mouse.
 6. Keyboard and mouse driver code with required abstractions.
 7. Software support for peripheral component interconnect(PCI) along with Base Address register(BAR).
+8. Video Graphics Array(VGA) support.
 
 More to be follow...
 
