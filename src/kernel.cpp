@@ -5,6 +5,7 @@
 #include <drivers/mouse.h>
 #include <drivers/driver.h>
 #include <hardware_communication/pci.h>
+#include <drivers/vga.h>
 
 using namespace myOS::common;
 using namespace myOS::hardware_communication;
@@ -104,6 +105,8 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	
 	pciController.select_drivers(&driverManager, &interruptManager);
 
+	VGA vga;
+
 	print("Initializing hardware, Step2...");
 	driverManager.activate_all();
 	print("Done with Step2\n");
@@ -111,6 +114,17 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	print("Initializing hardware, Step3...");
 	interruptManager.activate();
 	print("Done with Step3\n");
+
+	vga.set_mode(320, 200, 8);
+	// set the whole screen to blue using the vga
+	for(u16_t y = 0; y<200; y++)
+	{
+		for(u16_t x = 0; x<320; x++)
+		{
+			vga.put_pixel(x, y, 0x00, 0x00, 0xA8);
+		}
+	}
+
 
 	// infinite loop as kernel should be running at all times	
 	while(1);

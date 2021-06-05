@@ -22,7 +22,7 @@ GPPPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-rtti -fno-exceptio
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
-OBJECT_FILES = obj/loader.o obj/kernel.o obj/drivers/driver.o obj/hardware_communication/interrupts.o obj/hardware_communication/pci.o obj/drivers/mouse.o obj/hardware_communication/interruptsAssembly.o obj/gdt.o obj/hardware_communication/port.o obj/drivers/keyboard.o
+OBJECT_FILES = obj/loader.o obj/kernel.o obj/drivers/driver.o obj/drivers/vga.o obj/hardware_communication/interrupts.o obj/hardware_communication/pci.o obj/drivers/mouse.o obj/hardware_communication/interruptsAssembly.o obj/gdt.o obj/hardware_communication/port.o obj/drivers/keyboard.o
 
 obj/%.o: src/%.cpp
 	# -p indicates to create new directiories only if they do not exist
