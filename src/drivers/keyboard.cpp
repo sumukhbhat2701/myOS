@@ -63,62 +63,62 @@ u32_t KeyboardDriver::interrupt_handler(u32_t esp)
         static u8_t shift = 0;
         switch(key)
         {
-            case 0x02: if(shift) eventHandler->on_key_press('!');else eventHandler->on_key_press('1');break;
-            case 0x03: if(shift) eventHandler->on_key_press('@');else eventHandler->on_key_press('2');break;
-            case 0x04: if(shift) eventHandler->on_key_press('#');else eventHandler->on_key_press('3');break;
-            case 0x05: if(shift) eventHandler->on_key_press('$');else eventHandler->on_key_press('4');break;
-            case 0x06: if(shift) eventHandler->on_key_press('%');else eventHandler->on_key_press('5');break;
-            case 0x07: if(shift) eventHandler->on_key_press('^');else eventHandler->on_key_press('6');break;
-            case 0x08: if(shift) eventHandler->on_key_press('&');else eventHandler->on_key_press('7');break;
-            case 0x09: if(shift) eventHandler->on_key_press('*');else eventHandler->on_key_press('8');break;
-            case 0x0A: if(shift) eventHandler->on_key_press('(');else eventHandler->on_key_press('9');break;
-            case 0x0B: if(shift) eventHandler->on_key_press(')');else eventHandler->on_key_press('0');break;
+            case 0x02: if(shift) eventHandler->on_key_down('!');else eventHandler->on_key_down('1');break;
+            case 0x03: if(shift) eventHandler->on_key_down('@');else eventHandler->on_key_down('2');break;
+            case 0x04: if(shift) eventHandler->on_key_down('#');else eventHandler->on_key_down('3');break;
+            case 0x05: if(shift) eventHandler->on_key_down('$');else eventHandler->on_key_down('4');break;
+            case 0x06: if(shift) eventHandler->on_key_down('%');else eventHandler->on_key_down('5');break;
+            case 0x07: if(shift) eventHandler->on_key_down('^');else eventHandler->on_key_down('6');break;
+            case 0x08: if(shift) eventHandler->on_key_down('&');else eventHandler->on_key_down('7');break;
+            case 0x09: if(shift) eventHandler->on_key_down('*');else eventHandler->on_key_down('8');break;
+            case 0x0A: if(shift) eventHandler->on_key_down('(');else eventHandler->on_key_down('9');break;
+            case 0x0B: if(shift) eventHandler->on_key_down(')');else eventHandler->on_key_down('0');break;
 
-            case 0x10: if(shift) eventHandler->on_key_press('Q');else eventHandler->on_key_press('q');break;
-            case 0x11: if(shift) eventHandler->on_key_press('W');else eventHandler->on_key_press('w');break;
-            case 0x12: if(shift) eventHandler->on_key_press('E');else eventHandler->on_key_press('e');break;
-            case 0x13: if(shift) eventHandler->on_key_press('R');else eventHandler->on_key_press('r');break;
-            case 0x14: if(shift) eventHandler->on_key_press('T');else eventHandler->on_key_press('t');break;
-            case 0x15: if(shift) eventHandler->on_key_press('Y');else eventHandler->on_key_press('y');break;
-            case 0x16: if(shift) eventHandler->on_key_press('U');else eventHandler->on_key_press('u');break;
-            case 0x17: if(shift) eventHandler->on_key_press('I');else eventHandler->on_key_press('i');break;
-            case 0x18: if(shift) eventHandler->on_key_press('O');else eventHandler->on_key_press('o');break;
-            case 0x19: if(shift) eventHandler->on_key_press('P');else eventHandler->on_key_press('p');break;
+            case 0x10: if(shift) eventHandler->on_key_down('Q');else eventHandler->on_key_down('q');break;
+            case 0x11: if(shift) eventHandler->on_key_down('W');else eventHandler->on_key_down('w');break;
+            case 0x12: if(shift) eventHandler->on_key_down('E');else eventHandler->on_key_down('e');break;
+            case 0x13: if(shift) eventHandler->on_key_down('R');else eventHandler->on_key_down('r');break;
+            case 0x14: if(shift) eventHandler->on_key_down('T');else eventHandler->on_key_down('t');break;
+            case 0x15: if(shift) eventHandler->on_key_down('Y');else eventHandler->on_key_down('y');break;
+            case 0x16: if(shift) eventHandler->on_key_down('U');else eventHandler->on_key_down('u');break;
+            case 0x17: if(shift) eventHandler->on_key_down('I');else eventHandler->on_key_down('i');break;
+            case 0x18: if(shift) eventHandler->on_key_down('O');else eventHandler->on_key_down('o');break;
+            case 0x19: if(shift) eventHandler->on_key_down('P');else eventHandler->on_key_down('p');break;
 
-            case 0x1E: if(shift) eventHandler->on_key_press('A');else eventHandler->on_key_press('a');break;
-            case 0x1F: if(shift) eventHandler->on_key_press('S');else eventHandler->on_key_press('s');break;
-            case 0x20: if(shift) eventHandler->on_key_press('D');else eventHandler->on_key_press('d');break;
-            case 0x21: if(shift) eventHandler->on_key_press('F');else eventHandler->on_key_press('f');break;
-            case 0x22: if(shift) eventHandler->on_key_press('G');else eventHandler->on_key_press('g');break;
-            case 0x23: if(shift) eventHandler->on_key_press('H');else eventHandler->on_key_press('h');break;
-            case 0x24: if(shift) eventHandler->on_key_press('J');else eventHandler->on_key_press('j');break;
-            case 0x25: if(shift) eventHandler->on_key_press('K');else eventHandler->on_key_press('k');break;
-            case 0x26: if(shift) eventHandler->on_key_press('L');else eventHandler->on_key_press('l');break;
+            case 0x1E: if(shift) eventHandler->on_key_down('A');else eventHandler->on_key_down('a');break;
+            case 0x1F: if(shift) eventHandler->on_key_down('S');else eventHandler->on_key_down('s');break;
+            case 0x20: if(shift) eventHandler->on_key_down('D');else eventHandler->on_key_down('d');break;
+            case 0x21: if(shift) eventHandler->on_key_down('F');else eventHandler->on_key_down('f');break;
+            case 0x22: if(shift) eventHandler->on_key_down('G');else eventHandler->on_key_down('g');break;
+            case 0x23: if(shift) eventHandler->on_key_down('H');else eventHandler->on_key_down('h');break;
+            case 0x24: if(shift) eventHandler->on_key_down('J');else eventHandler->on_key_down('j');break;
+            case 0x25: if(shift) eventHandler->on_key_down('K');else eventHandler->on_key_down('k');break;
+            case 0x26: if(shift) eventHandler->on_key_down('L');else eventHandler->on_key_down('l');break;
 
-            case 0x2C: if(shift) eventHandler->on_key_press('Z');else eventHandler->on_key_press('z');break;
-            case 0x2D: if(shift) eventHandler->on_key_press('X');else eventHandler->on_key_press('x');break;
-            case 0x2E: if(shift) eventHandler->on_key_press('C');else eventHandler->on_key_press('c');break;
-            case 0x2F: if(shift) eventHandler->on_key_press('V');else eventHandler->on_key_press('v');break;
-            case 0x30: if(shift) eventHandler->on_key_press('B');else eventHandler->on_key_press('b');break;
-            case 0x31: if(shift) eventHandler->on_key_press('N');else eventHandler->on_key_press('n');break;
-            case 0x32: if(shift) eventHandler->on_key_press('M');else eventHandler->on_key_press('m');break;
-            case 0x33: if(shift) eventHandler->on_key_press('<');else eventHandler->on_key_press(',');break;
-            case 0x34: if(shift) eventHandler->on_key_press('>');else eventHandler->on_key_press('.');break;
-            case 0x35: if(shift) eventHandler->on_key_press('_');else eventHandler->on_key_press('-');break;
+            case 0x2C: if(shift) eventHandler->on_key_down('Z');else eventHandler->on_key_down('z');break;
+            case 0x2D: if(shift) eventHandler->on_key_down('X');else eventHandler->on_key_down('x');break;
+            case 0x2E: if(shift) eventHandler->on_key_down('C');else eventHandler->on_key_down('c');break;
+            case 0x2F: if(shift) eventHandler->on_key_down('V');else eventHandler->on_key_down('v');break;
+            case 0x30: if(shift) eventHandler->on_key_down('B');else eventHandler->on_key_down('b');break;
+            case 0x31: if(shift) eventHandler->on_key_down('N');else eventHandler->on_key_down('n');break;
+            case 0x32: if(shift) eventHandler->on_key_down('M');else eventHandler->on_key_down('m');break;
+            case 0x33: if(shift) eventHandler->on_key_down('<');else eventHandler->on_key_down(',');break;
+            case 0x34: if(shift) eventHandler->on_key_down('>');else eventHandler->on_key_down('.');break;
+            case 0x35: if(shift) eventHandler->on_key_down('_');else eventHandler->on_key_down('-');break;
 
-            case 0x52: if(!shift) eventHandler->on_key_press('0');break;
-            case 0x4F: if(!shift) eventHandler->on_key_press('1');break;
-            case 0x51: if(!shift) eventHandler->on_key_press('3');break;
-            case 0x4B: if(!shift) eventHandler->on_key_press('4');break;
-            case 0x4C: if(!shift) eventHandler->on_key_press('5');break;
-            case 0x4D: if(!shift) eventHandler->on_key_press('6');break;
-            case 0x47: if(!shift) eventHandler->on_key_press('7');break;
-            case 0x48: if(!shift) eventHandler->on_key_press('8');break;
-            case 0x49: if(!shift) eventHandler->on_key_press('9');break;
-            case 0x50: if(!shift) eventHandler->on_key_press('2');break;
+            case 0x52: if(!shift) eventHandler->on_key_down('0');break;
+            case 0x4F: if(!shift) eventHandler->on_key_down('1');break;
+            case 0x51: if(!shift) eventHandler->on_key_down('3');break;
+            case 0x4B: if(!shift) eventHandler->on_key_down('4');break;
+            case 0x4C: if(!shift) eventHandler->on_key_down('5');break;
+            case 0x4D: if(!shift) eventHandler->on_key_down('6');break;
+            case 0x47: if(!shift) eventHandler->on_key_down('7');break;
+            case 0x48: if(!shift) eventHandler->on_key_down('8');break;
+            case 0x49: if(!shift) eventHandler->on_key_down('9');break;
+            case 0x50: if(!shift) eventHandler->on_key_down('2');break;
 
-            case 0x1C: eventHandler->on_key_press('\n');break;
-            case 0x39: eventHandler->on_key_press(' ');break;
+            case 0x1C: eventHandler->on_key_down('\n');break;
+            case 0x39: eventHandler->on_key_down(' ');break;
 
             // left and right shift key press interrupt
             case 0x2A: case 0x36: shift = 1; break;
@@ -149,17 +149,17 @@ KeyboardEventHandler::~KeyboardEventHandler()
 
 }
 
-void KeyboardEventHandler::on_key_press(char)
+void KeyboardEventHandler::on_key_down(char)
 {
 
 }
 
-void KeyboardEventHandler::on_key_release(char)
+void KeyboardEventHandler::on_key_up(char)
 {
 
 }
 
-void PrintKeyboardEventHandler::on_key_press(char ch)
+void PrintKeyboardEventHandler::on_key_down(char ch)
 {
     char* message = " ";
     message[0] = ch;

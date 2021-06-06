@@ -58,30 +58,53 @@ void VGA::write_registers(u8_t* registers)
 u8_t* VGA::get_frame_buffer_segment()
 {
     graphics_controller_index_port.write(0x06);
-    u8_t segment_number = ((graphics_controller_data_port.read() >> 2) & 0x03); 
+    u8_t segment_number = ((graphics_controller_data_port.read()) & (3<<2)); 
     switch(segment_number)
     {
-        case 0: return (u8_t *)0x00000;
-        case 1: return (u8_t *)0xA0000;
-        case 2: return (u8_t *)0xB0000;
-        case 3: return (u8_t *)0xB8000;
-        default: break;
+        default:
+        case 0<<2: return (u8_t *)0x00000;
+        case 1<<2: return (u8_t *)0xA0000;
+        case 2<<2: return (u8_t *)0xB0000;
+        case 3<<2: return (u8_t *)0xB8000;    
     }
 }
 
 void VGA::put_pixel(s32_t x, s32_t y, u8_t color_index)
 {
+    if(x<0 || 320 <= x || y<0 || 200<=y) return;
     u8_t* pixel_address = get_frame_buffer_segment() + 320*y + x; 
     *pixel_address = color_index;
 }
+
 u8_t VGA::get_color_index(u8_t r, u8_t g, u8_t b)
 {
-    // (0,0,0xA8) is blue
+    // (0,0,0xA8) is blue at index 1
     if(r == 0 && g == 0 && b == 0xA8)
     {
         return 0x01;
     }
-
+    // (0,0,0) is black at index 0
+    if(r == 0 && g == 0 && b == 0)
+    {
+        return 0x00;
+    }
+    // (0,0,0xA8) is red at index 4
+    if(r == 0xA8 && g == 0 && b == 0)
+    {
+        return 0x04;
+    }
+    // (0,0,0xA8) is green at index 2
+    if(r == 0 && g == 0xA8 && b == 0)
+    {
+        return 0x02;
+    }
+    // (0,0,0xA8) is white at index 0x3F
+    if(r == 0xFF && g == 0xFF && b == 0xFF)
+    {
+        return 0x3F;
+    }
+    // default - black
+    return 0x00;
 }
 
 
@@ -155,9 +178,9 @@ void VGA::put_pixel(s32_t x, s32_t y, u8_t r, u8_t g, u8_t b)
 void VGA::fill_rectangle(s32_t x, s32_t y, s32_t w, s32_t h, u8_t r, u8_t g, u8_t b)
 {
     // set the whole screen to blue using the vga
-	for(u16_t Y = 0; Y<y+h; Y++)
+	for(s32_t Y = y; Y<y+h; Y++)
 	{
-		for(u16_t X = 0; X<x+w; X++)
+		for(s32_t X = x; X<x+w; X++)
 		{
 			put_pixel(X, Y, r, g, b);
 		}

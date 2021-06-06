@@ -95,7 +95,7 @@ u32_t MouseDriver::interrupt_handler(u32_t esp)
         if(buffer[1] !=0 || buffer[2] !=0)
         {   
             // new X = old X + buffer[1] ; new Y = old Y - buffer[2] (so we pass -buffer[2])
-            eventHandler->on_mouse_move(buffer[1],-buffer[2]);
+            eventHandler->on_mouse_move((s32_t)buffer[1],-((s32_t)buffer[2]));
             
 
             // button press - buffer[0]

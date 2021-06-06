@@ -6,11 +6,13 @@
 #include <drivers/driver.h>
 #include <hardware_communication/pci.h>
 #include <drivers/vga.h>
+#include <gui/desktop.h>
 
 using namespace myOS::common;
 using namespace myOS::hardware_communication;
 using namespace myOS::drivers;
 using namespace myOS;
+using namespace myOS::gui;
 
 // Write our own print function as we do not have IO header files in our new OS space.
 void print(char* s)
@@ -116,7 +118,10 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	print("Done with Step3\n");
 
 	vga.set_mode(320, 200, 8);
-	vga.fill_rectangle(0, 0, 320, 200, 0, 0, 0xA8);
+	// vga.fill_rectangle(0, 0, 320, 200, 0, 0, 0xA8);
+
+	Desktop desktop(320, 200, 0, 0, 0xA8);
+	desktop.draw(&vga);
 
 
 	// infinite loop as kernel should be running at all times	

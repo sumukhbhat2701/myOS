@@ -3,7 +3,8 @@
 using namespace myOS::common;
 using namespace myOS::gui;
 
-Widget::Widget(Widget* parent, s32_t x, s32_t y, s32_t z, u8_t r, u8_t g, u8_t b)
+Widget::Widget(Widget* parent, s32_t x, s32_t y, s32_t w, s32_t h,  u8_t r, u8_t g, u8_t b)
+:KeyboardEventHandler()
 {
     this->parent = parent;
     this->x = x;
@@ -32,10 +33,12 @@ void Widget::get_focus(Widget* widget)
 // &x and &y because it is pass by reference. Hence to find relative value of x and y and change it in function itself and retain its value once returns to the called function
 void Widget::model_to_screen(s32_t &x, s32_t &y)
 {
+    // if it has parent
     if(parent!=0)
     {
         parent->model_to_screen(x,y);
     }
+    
     x += this->x;
     y += this->y;
 }
@@ -47,7 +50,13 @@ void Widget::draw(GraphicsContext* gc)
     gc->fill_rectangle(X, Y, w, h, r, g, b);
 }
 
-void Widget::on_mouse_down(s32_t x, s32_t y)
+u8_t Widget::contains_coordinate(s32_t x, s32_t y)
+{
+    return this->x <= x && x < this->x + this->w && this->y <= y && y < this->y + this->h;
+}
+
+
+void Widget::on_mouse_down(s32_t x, s32_t y, u8_t button)
 {
     if(focussable)
     {
@@ -55,7 +64,7 @@ void Widget::on_mouse_down(s32_t x, s32_t y)
     }
 }
 
-void Widget::on_mouse_up(s32_t x, s32_t y)
+void Widget::on_mouse_up(s32_t x, s32_t y, u8_t button)
 {
 
 }
@@ -65,20 +74,11 @@ void Widget::on_mouse_move(s32_t oldX, s32_t oldY, s32_t newX, s32_t newY)
 
 }
 
-void Widget::on_key_down(char* s)
-{
-
-}
-
-void Widget::on_key_up(char* s)
-{
-
-}
 
 
 
-CompositeWidget::CompositeWidget(Widget* parent, s32_t x, s32_t y, s32_t z, u8_t r, u8_t g, u8_t b)
-{
+CompositeWidget::CompositeWidget(Widget* parent, s32_t x, s32_t y, s32_t w, s32_t h, u8_t r, u8_t g, u8_t b)
+: Widget(parent,x,y,w,h,r,g,b){
     focussed_child = 0;
     num_of_children = 0;
 }
@@ -108,25 +108,25 @@ void CompositeWidget::draw(GraphicsContext* gc)
     }
 }
 
-void CompositeWidget::on_mouse_down(s32_t x, s32_t y)
+void CompositeWidget::on_mouse_down(s32_t x, s32_t y, u8_t button)
 {
-    for(u32_t i = 0; i<num_of_children; i--)
+    for(u32_t i = 0; i<num_of_children; i++)
     {
         if(children[i]->contains_coordinate(x -this->x, y - this->y))
         {
-            children[i]->on_mouse_down(x -this->x, y - this->y);
+            children[i]->on_mouse_down(x -this->x, y - this->y, button);
             break;
         }
     }
 }
 
-void CompositeWidget::on_mouse_up(s32_t x, s32_t y)
+void CompositeWidget::on_mouse_up(s32_t x, s32_t y, u8_t button)
 {
-    for(u32_t i = 0; i<num_of_children; i--)
+    for(u32_t i = 0; i<num_of_children; i++)
     {
         if(children[i]->contains_coordinate(x -this->x, y - this->y))
         {
-            children[i]->on_mouse_up(x -this->x, y - this->y);
+            children[i]->on_mouse_up(x -this->x, y - this->y, button);
             break;
         }
     }
@@ -135,7 +135,7 @@ void CompositeWidget::on_mouse_up(s32_t x, s32_t y)
 void CompositeWidget::on_mouse_move(s32_t oldX, s32_t oldY, s32_t newX, s32_t newY)
 {
     u32_t first_child = -1;
-    for(u32_t i = 0; i<num_of_children; i--)
+    for(u32_t i = 0; i<num_of_children; i++)
     {
         if(children[i]->contains_coordinate(oldX -this->x, oldX - this->y))
         {
@@ -145,7 +145,7 @@ void CompositeWidget::on_mouse_move(s32_t oldX, s32_t oldY, s32_t newX, s32_t ne
         }
     }
 
-    for(u32_t i = 0; i<num_of_children; i--)
+    for(u32_t i = 0; i<num_of_children; i++)
     {
         if(children[i]->contains_coordinate(newX -this->x, newY - this->y))
         {
@@ -158,7 +158,7 @@ void CompositeWidget::on_mouse_move(s32_t oldX, s32_t oldY, s32_t newX, s32_t ne
     }
 }
 
-void CompositeWidget::on_key_down(char* s)
+void CompositeWidget::on_key_down(char s)
 {
     if(focussed_child!=0)
     {
@@ -166,10 +166,21 @@ void CompositeWidget::on_key_down(char* s)
     }
 }
 
-void CompositeWidget::on_key_up(char* s)
+void CompositeWidget::on_key_up(char s)
 {
     if(focussed_child!=0)
     {
         focussed_child->on_key_up(s);
     }
+}
+
+u8_t CompositeWidget::add_child(myOS::gui::Widget* child)
+{
+    // we have defined children[100]
+    if(num_of_children >= 100)
+    {
+        return 0;
+    }
+    children[num_of_children++] = child;
+    return 1;
 }

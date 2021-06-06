@@ -34,8 +34,8 @@ namespace myOS
                 KeyboardEventHandler();
                 ~KeyboardEventHandler();
 
-                virtual void on_key_press(char);
-                virtual void on_key_release(char);
+                virtual void on_key_down(char);
+                virtual void on_key_up(char);
         };
 
         // we define the behaviour of each event separately by deriving from KeyboardEventHandler base and overriding the functions to perform different operations on keypress and keyrelease
@@ -44,7 +44,7 @@ namespace myOS
         {
             public:
                 // overriden from base class
-                void on_key_press(char ch);
+                void on_key_down(char ch);
 
         };
     }
