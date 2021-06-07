@@ -8,9 +8,10 @@
 #include <drivers/vga.h>
 #include <gui/desktop.h>
 #include <gui/window.h>
+#include <multitasking.h>
 
 // uncomment the following line to have basic graphics(gui):
-#define GRAPHICS_MODE
+// #define GRAPHICS_MODE
 
 using namespace myOS::common;
 using namespace myOS::hardware_communication;
@@ -87,13 +88,36 @@ extern "C" void call_ctors()
 	}
 }
 
+void taskA()
+{
+	while(1)
+	{
+		print("taskA\n");
+	}
+}
+
+void taskB()
+{
+	while(1)
+	{
+		print("taskB\n");
+	}
+}
+
 // functions paramters are from ax and bx registers pushed in loader.s
 extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number)  
 {
 	print("Yay! You made it!\n");
 
 	GlobalDescriptorTable gdt;
-	InterruptManager interruptManager(&gdt);
+
+	TaskManager task_manager;
+	Task task1(&gdt, taskA);
+	Task task2(&gdt, taskB);
+	task_manager.add_task(&task1);
+	task_manager.add_task(&task2);
+
+	InterruptManager interruptManager(&gdt, &task_manager);
 
 	#ifdef GRAPHICS_MODE
 		Desktop desktop(320, 200, 0, 0, 0xA8);

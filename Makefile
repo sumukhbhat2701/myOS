@@ -35,7 +35,8 @@ OBJECT_FILES =  obj/loader.o \
 				obj/drivers/keyboard.o \
 				obj/gui/desktop.o \
 				obj/gui/widget.o \
-				obj/gui/window.o
+				obj/gui/window.o \
+				obj/multitasking.o
 
 obj/%.o: src/%.cpp
 	# -p indicates to create new directiories only if they do not exist

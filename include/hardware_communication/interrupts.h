@@ -2,6 +2,7 @@
 #define INTERRUPTS_H 
 #include <hardware_communication/port.h>
 #include <gdt.h>
+#include <multitasking.h>
 
 namespace myOS
 {
@@ -18,6 +19,7 @@ namespace myOS
                 // points to which interrupt is active
                 static InterruptManager* ActiveInterruptManager;
                 InterruptHandler* handlers[256];
+                TaskManager* task_manager;
 
                 struct GateDescriptor
                 {
@@ -46,7 +48,7 @@ namespace myOS
 
             public:
 
-                InterruptManager(GlobalDescriptorTable* gdt);
+                InterruptManager(GlobalDescriptorTable* gdt, TaskManager* task_manager);
                 ~InterruptManager();
 
                 // activate or deactivate an interrupt
