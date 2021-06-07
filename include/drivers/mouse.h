@@ -42,6 +42,7 @@ namespace myOS
                 MouseEventHandler();
                 ~MouseEventHandler();
                 
+                virtual void on_activate();
                 virtual void on_mouse_up(myOS::common::u8_t);
                 virtual void on_mouse_down(myOS::common::u8_t);
                 virtual void on_mouse_move(myOS::common::s32_t, myOS::common::s32_t);

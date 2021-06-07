@@ -78,7 +78,8 @@ void Widget::on_mouse_move(s32_t oldX, s32_t oldY, s32_t newX, s32_t newY)
 
 
 CompositeWidget::CompositeWidget(Widget* parent, s32_t x, s32_t y, s32_t w, s32_t h, u8_t r, u8_t g, u8_t b)
-: Widget(parent,x,y,w,h,r,g,b){
+: Widget(parent,x,y,w,h,r,g,b)
+{
     focussed_child = 0;
     num_of_children = 0;
 }
@@ -102,7 +103,7 @@ void CompositeWidget::draw(GraphicsContext* gc)
     // draw a background for itself
     Widget::draw(gc);
     // draw the children
-    for(u32_t i = num_of_children-1; i>=0; i--)
+    for(s32_t i = num_of_children-1; i>=0; i--)
     {
         children[i]->draw(gc);
     }

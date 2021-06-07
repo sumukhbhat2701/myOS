@@ -16,7 +16,7 @@ namespace myOS
                 myOS::common::u32_t mouseY;
 
             public:
-                Desktop(myOS::common::s32_t w, myOS::common::s32_t h, myOS::common::u32_t r, myOS::common::u32_t g, myOS::common::u32_t b);
+                Desktop(myOS::common::s32_t w, myOS::common::s32_t h, myOS::common::u8_t r, myOS::common::u8_t g, myOS::common::u8_t b);
                 ~Desktop();
 
                 void draw(myOS::common::GraphicsContext* gc);

@@ -2,7 +2,7 @@
 using namespace myOS::common;
 using namespace myOS::gui;
 
-Desktop::Desktop(s32_t w, s32_t h, u32_t r, u32_t g, u32_t b)
+Desktop::Desktop(s32_t w, s32_t h, u8_t r, u8_t g, u8_t b)
 : CompositeWidget(0, 0, 0, w, h, r, g, b),
 MouseEventHandler()
 {
