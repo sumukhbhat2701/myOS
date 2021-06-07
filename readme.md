@@ -25,8 +25,12 @@
 7. Software support for peripheral component interconnect(PCI) along with Base Address register(BAR).
 8. Video Graphics Array(VGA) support.
 9. Minimum GUI built upon VGA: draggable window, colored widgets, mouse cursor, window.
+10. Multitasking capability.
 
 More to be follow...
+
+### Flaws:
+1. No separation of kernel and user space. ([how to achieve it?](https://wiki.osdev.org/Getting_to_Ring_3))
 
 ### References:
 1. [osdev.org](https://wiki.osdev.org/Main_Page)

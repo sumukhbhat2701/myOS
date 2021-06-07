@@ -176,3 +176,7 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 		#endif
 	}
 }
+
+
+
+// separating userspace and kernelspace - https://wiki.osdev.org/Getting_to_Ring_3
