@@ -7,6 +7,10 @@
 #include <hardware_communication/pci.h>
 #include <drivers/vga.h>
 #include <gui/desktop.h>
+#include <gui/window.h>
+
+// uncomment the following line to have basic graphics(gui):
+#define GRAPHICS_MODE
 
 using namespace myOS::common;
 using namespace myOS::hardware_communication;
@@ -91,39 +95,60 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 	GlobalDescriptorTable gdt;
 	InterruptManager interruptManager(&gdt);
 
+	#ifdef GRAPHICS_MODE
+		Desktop desktop(320, 200, 0, 0, 0xA8);
+	#endif
+	
 	print("Initializing hardware, Step1...");
 	DriverManager driverManager;
 	print("Done with Step1\n");
 	
-	PrintKeyboardEventHandler keyboardEventHandler;
-	KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
+	#ifdef GRAPHICS_MODE
+		KeyboardDriver keyboard(&interruptManager, &desktop);
+	#else
+		PrintKeyboardEventHandler keyboardEventHandler;
+		KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
+	#endif
 	driverManager.add_driver(&keyboard);
 	
-	DisplayMouseEventHandler mouseEventHandler;
-	MouseDriver mouse(&interruptManager, &mouseEventHandler);
+	#ifdef GRAPHICS_MODE
+		MouseDriver mouse(&interruptManager, &desktop);
+	#else
+		DisplayMouseEventHandler mouseEventHandler;
+		MouseDriver mouse(&interruptManager, &mouseEventHandler);		
+	#endif
 	driverManager.add_driver(&mouse);
 	
 	PCIController pciController;
 	
 	pciController.select_drivers(&driverManager, &interruptManager);
 
-	VGA vga;
+	#ifdef GRAPHICS_MODE
+		VGA vga;
+	#endif
 
 	print("Initializing hardware, Step2...");
 	driverManager.activate_all();
 	print("Done with Step2\n");
 
+	#ifdef GRAPHICS_MODE
+		vga.set_mode(320, 200, 8);
+		Window window1(&desktop, 10, 10, 20, 20, 0xA8, 0, 0);
+		desktop.add_child(&window1);
+		Window window2(&desktop, 40, 15, 30, 30, 0, 0xA8, 0);
+		desktop.add_child(&window2);
+	#endif
+
 	print("Initializing hardware, Step3...");
 	interruptManager.activate();
 	print("Done with Step3\n");
 
-	vga.set_mode(320, 200, 8);
-	// vga.fill_rectangle(0, 0, 320, 200, 0, 0, 0xA8);
-
-	Desktop desktop(320, 200, 0, 0, 0xA8);
-	desktop.draw(&vga);
-
-
-	// infinite loop as kernel should be running at all times	
-	while(1);
+	// infinite loop as kernel should be running at all times
+	// update the desktop gui every loop	
+	while(1)
+	{
+		#ifdef GRAPHICS_MODE
+			desktop.draw(&vga);
+		#endif
+	}
 }

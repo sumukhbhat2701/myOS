@@ -24,6 +24,7 @@
 6. Keyboard and mouse driver code with required abstractions.
 7. Software support for peripheral component interconnect(PCI) along with Base Address register(BAR).
 8. Video Graphics Array(VGA) support.
+9. Minimum GUI built upon VGA: draggable window, colored widgets, mouse cursor, window.
 
 More to be follow...
 

@@ -100,7 +100,7 @@ u32_t MouseDriver::interrupt_handler(u32_t esp)
         if(buffer[1] !=0 || buffer[2] !=0)
         {   
             // new X = old X + buffer[1] ; new Y = old Y - buffer[2] (so we pass -buffer[2])
-            eventHandler->on_mouse_move((s8_t)buffer[1],-((s8_t)buffer[2]));
+            eventHandler->on_mouse_move((s32_t)buffer[1],-((s32_t)buffer[2]));
             
 
             // button press - buffer[0]
@@ -112,7 +112,7 @@ u32_t MouseDriver::interrupt_handler(u32_t esp)
                 {
                     //functionality of button represented by ith bytes
                     
-                    if(buttons  & (0x1 << 1))
+                    if(buttons  & (0x1 << i))
                         eventHandler->on_mouse_up(i+1);
                     else
                         eventHandler->on_mouse_down(i+1);

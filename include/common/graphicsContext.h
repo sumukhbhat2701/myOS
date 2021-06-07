@@ -6,6 +6,7 @@ namespace myOS
 {
     namespace common
     {
+        // use vga as base from graphics
         typedef myOS::drivers::VGA GraphicsContext;
     }
 }
