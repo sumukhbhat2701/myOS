@@ -33,6 +33,7 @@ namespace myOS
     
     class Task
     {
+        // each task/process is given its own stack
         friend class TaskManager;
         private:
             myOS::common::u8_t stack[4096]; // 4KB

@@ -19,6 +19,10 @@ namespace myOS
 
         typedef long long int s64_t;
         typedef unsigned long long int u64_t;
+
+        typedef const char* string;
+        typedef u32_t size_t;
+
     }   
 }  
  

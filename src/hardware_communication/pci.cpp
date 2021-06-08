@@ -135,6 +135,8 @@ PCIDeviceDescriptor::~PCIDeviceDescriptor()
 
 Driver* PCIController::get_driver(PCIDeviceDescriptor device, InterruptManager* interruptManager)
 {
+    Driver* driver = 0;
+
     // identify specific devices and their drivers
     switch(device.vendor_id)
     {
@@ -144,6 +146,9 @@ Driver* PCIController::get_driver(PCIDeviceDescriptor device, InterruptManager* 
             {
                 // am79c973 - network chip (default for vm, change in network settings => advanced => adaptor type)
                 case 0x2000: 
+                    // driver = (amd_am79c973 *)MemoryManager::active_memory_manager->malloc(sizeof(amd_am79c973));
+                    // if(driver!=0)
+                    //     new (driver)amd_am79c973(...);
                     print("am79c973; ");
                     break;
 
@@ -175,7 +180,7 @@ Driver* PCIController::get_driver(PCIDeviceDescriptor device, InterruptManager* 
         break;
     }
 
-    return 0;
+    return driver;
 }
 
 BaseAddressRegister PCIController:: get_base_address_register(u16_t bus, u16_t device, u16_t function, u16_t bar)

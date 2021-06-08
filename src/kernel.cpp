@@ -9,6 +9,7 @@
 #include <gui/desktop.h>
 #include <gui/window.h>
 #include <multitasking.h>
+#include <memory_manager.h>
 
 // uncomment the following line to have basic graphics(gui):
 // #define GRAPHICS_MODE
@@ -66,10 +67,10 @@ void print(char* s)
 
 void print_hex(u32_t key)
 {
-	char *message = "0x00";
+	char *message = "00";
 	char *hexa = "0123456789ABCDEF";
-	message[2] = hexa[(key >> 4) & 0x0F];
-	message[3] = hexa[key & 0x0F];
+	message[0] = hexa[(key >> 4) & 0x0F];
+	message[1] = hexa[key & 0x0F];
 	print(message);
 }
 
@@ -111,11 +112,31 @@ extern "C" void kernel_main(void* multiboot_structure, unsigned int magic_number
 
 	GlobalDescriptorTable gdt;
 
+	size_t heap = 10*1024*1024; // 10 MegaBytes
+	// The heap can be created in memory after the multiboot structure loaded and BIOS loaded(which is 8 bytes), making sure they are not overwritten
+	u32_t* memupper = (u32_t *)(((size_t)multiboot_structure)+8);
+	MemoryManager memory_manager(heap, (*memupper)*1024 - heap - 10*1024);
+
+	print("Heap: ");
+	print_hex((heap >> 24) & 0xFF);
+	print_hex((heap >> 16) & 0xFF);
+	print_hex((heap >> 8) & 0xFF);
+	print_hex(heap & 0xFF);
+
+	void* ptr = memory_manager.malloc(1024);
+	print("\nAllocated: ");
+	print_hex(((size_t)ptr >> 24) & 0xFF);
+	print_hex(((size_t)ptr >> 16) & 0xFF);
+	print_hex(((size_t)ptr >> 8) & 0xFF);
+	print_hex((size_t)ptr & 0xFF);
+	print("\n");
+
+	// uncomment the below lines to observe multitasking in action:
 	TaskManager task_manager;
-	Task task1(&gdt, taskA);
-	Task task2(&gdt, taskB);
-	task_manager.add_task(&task1);
-	task_manager.add_task(&task2);
+	// Task task1(&gdt, taskA);
+	// Task task2(&gdt, taskB);
+	// task_manager.add_task(&task1);
+	// task_manager.add_task(&task2);
 
 	InterruptManager interruptManager(&gdt, &task_manager);
 

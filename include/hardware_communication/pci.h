@@ -4,6 +4,7 @@
 #include<hardware_communication/port.h>
 #include<hardware_communication/interrupts.h>
 #include<drivers/driver.h>
+#include<memory_manager.h>
 
 // instead of explicilty invoking drivers, make use of pci and make it directly connect to the drivers
 

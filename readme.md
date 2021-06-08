@@ -26,11 +26,12 @@
 8. Video Graphics Array(VGA) support.
 9. Minimum GUI built upon VGA: draggable window, colored widgets, mouse cursor, window.
 10. Multitasking capability.
+11. A Heap and dynamic memory manager with allocation and deallocation mimicing malloc and free using first-fit methodology, implemented using doubly linked lists as book-keeping structures.
 
 More to be follow...
 
 ### Flaws:
-1. No separation of kernel and user space. ([how to achieve it?](https://wiki.osdev.org/Getting_to_Ring_3))
+1. No separation of kernel and user space. ([this is how you achieve it](https://wiki.osdev.org/Getting_to_Ring_3))
 
 ### References:
 1. [osdev.org](https://wiki.osdev.org/Main_Page)
