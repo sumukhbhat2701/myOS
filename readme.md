@@ -1,4 +1,4 @@
-32-bit operating system coded for i386 processors using c++, x86 assembly language and linker scripts.
+32-bit operating system coded for i386 processors using c++, x86 assembly language and linker scripts. 
 ### Pre-requisites to generate .bin and .iso files: 
 1. linux OS with pre-existing bootloader (like Grub). 
 2. with the following tools installed: g++, binutils, libc6-dev-i386, virtualbox, grub-legacy, xorriso. (use `sudo apt-get install <package-name>`)
